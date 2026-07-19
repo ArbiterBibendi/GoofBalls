@@ -44,4 +44,6 @@ replication_config = SubResource("SceneReplicationConfig_3tj6u")
 
 [node name="Label3D" type="Label3D" parent="." unique_id=1961781341]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.87181866, 0)
+top_level = true
+billboard = 2
 text = "Id"

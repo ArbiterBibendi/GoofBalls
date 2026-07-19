@@ -25,6 +25,12 @@ public partial class Player : RigidBody3D
     }
     public override void _PhysicsProcess(double delta) {
         base._PhysicsProcess(delta);
+
+        // We don't want the label rotating with the player
+        Transform3D transform = Transform;
+        _label.Transform = Transform;
+        _label.GlobalTranslate(Vector3.Up);
+
         Array<Node3D> collidingBodies = GetCollidingBodies();
         if (collidingBodies == null) {
             return;
