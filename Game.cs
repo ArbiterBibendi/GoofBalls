@@ -7,6 +7,7 @@ public partial class Game : Node3D
     public static Game Instance = null;
     Dictionary<long, Player> _players = new Dictionary<long, Player>();
     Panel _menu = null;
+    Node3D _spawnPoint = null;
     public Game()
     {
         Instance = this;
@@ -15,6 +16,7 @@ public partial class Game : Node3D
     {
         base._Ready();
         _menu = GetNode<Panel>("Menu");
+        _spawnPoint = GetNode<Node3D>("Map/SpawnPoint");
     }
     public void CreateGame()
     {
@@ -29,11 +31,11 @@ public partial class Game : Node3D
 
         _menu.Visible = false;
         GD.Print("Create", Multiplayer.GetUniqueId());
-        Rpc(MethodName.AddPlayer, true, Multiplayer.GetUniqueId());
+        Rpc(MethodName.AddPlayer, Multiplayer.GetUniqueId());
     }
     public void JoinGame()
     {
-        ENetMultiplayerPeer peer = new ENetMultiplayerPeer();
+        ENetMultiplayerPeer peer = new();
         Error e = peer.CreateClient("127.0.0.1", 1337);
         if (e != Error.Ok)
         {
@@ -53,18 +55,19 @@ public partial class Game : Node3D
         {
             foreach (var kvp in _players)
             {
-                RpcId(id, MethodName.AddPlayer, false, kvp.Key);
+                RpcId(id, MethodName.AddPlayer, kvp.Key);
             }
-            Rpc(MethodName.AddPlayer, id == Multiplayer.GetUniqueId(), id);
+            Rpc(MethodName.AddPlayer, id);
         }
     }
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
-    private void AddPlayer(bool isLocal, long id)
+    private void AddPlayer(long id)
     {
         PackedScene ballScene = GD.Load<PackedScene>("res://Player.tscn");
         Player player = ballScene.Instantiate<Player>();
         player.SetId(id);
         player.Name = id.ToString();
+        player.Transform = _spawnPoint.Transform;
         GD.Print("Adding Player: ", id);
         AddChild(player);
         _players[id] = player;

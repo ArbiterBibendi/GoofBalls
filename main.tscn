@@ -34,6 +34,16 @@ size = Vector3(5.5, 2, 5.5)
 [sub_resource type="BoxShape3D" id="BoxShape3D_0xm2m"]
 size = Vector3(5.5, 2, 5.5)
 
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_kek77"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_5vw27"]
+noise = SubResource("FastNoiseLite_kek77")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h2yge"]
+albedo_color = Color(3.85046e-07, 0.6926086, 0.6926083, 1)
+albedo_texture = SubResource("NoiseTexture2D_5vw27")
+uv1_scale = Vector3(1000, 1000, 1000)
+
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7dm0k"]
 sky_top_color = Color(0, 0, 0, 1)
 sky_horizon_color = Color(0.000839947, 0.013831591, 0.05327387, 1)
@@ -66,6 +76,7 @@ script = ExtResource("1_1bvp3")
 [node name="Map" type="Node3D" parent="." unique_id=505721116]
 
 [node name="StaticBody3D" type="StaticBody3D" parent="Map" unique_id=1385229345]
+visible = false
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="Map/StaticBody3D" unique_id=1871968622]
 mesh = SubResource("BoxMesh_pl1xf")
@@ -77,6 +88,15 @@ shape = SubResource("BoxShape3D_0xm2m")
 transform = Transform3D(0.77898234, 0.07382818, -0.6226845, 0.512466, -0.6472041, 0.56436294, -0.36133808, -0.7587334, -0.5419949, -1.4992182, 5.5266705, -1.5272079)
 light_color = Color(0.7647059, 0.85882354, 0, 1)
 light_energy = 10.03
+
+[node name="TempWorld" type="CSGBox3D" parent="Map" unique_id=197924698]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.50908196, 0)
+use_collision = true
+size = Vector3(100, 1, 100)
+material = SubResource("StandardMaterial3D_h2yge")
+
+[node name="SpawnPoint" type="Marker3D" parent="Map" unique_id=1116308411]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.127588, 0)
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1936459526]
 transform = Transform3D(1, 0, 0, 0, 0.90632254, 0.4225866, 0, -0.4225866, 0.90632254, 0, 3.0846565, 4.737317)

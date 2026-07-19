@@ -4,6 +4,9 @@
 [ext_resource type="Script" uid="uid://dw6yn3tb2w7f1" path="res://Player.cs" id="2_kne1u"]
 [ext_resource type="AudioStream" uid="uid://cwhbcmycwh3vj" path="res://vine-boom.mp3" id="3_cxr5p"]
 
+[sub_resource type="PhysicsMaterial" id="PhysicsMaterial_0xm2m"]
+friction = 0.24
+
 [sub_resource type="SphereMesh" id="SphereMesh_pl1xf"]
 material = ExtResource("2_e80uo")
 
@@ -24,6 +27,7 @@ properties/3/spawn = true
 properties/3/replication_mode = 1
 
 [node name="RigidBody3D" type="RigidBody3D" unique_id=204978772]
+physics_material_override = SubResource("PhysicsMaterial_0xm2m")
 contact_monitor = true
 max_contacts_reported = 4
 script = ExtResource("2_kne1u")
