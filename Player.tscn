@@ -2,7 +2,7 @@
 
 [ext_resource type="Material" uid="uid://dtmg2480rb7hi" path="res://Player.tres" id="2_e80uo"]
 [ext_resource type="Script" uid="uid://dw6yn3tb2w7f1" path="res://Player.cs" id="2_kne1u"]
-[ext_resource type="AudioStream" uid="uid://cwhbcmycwh3vj" path="res://vine-boom.mp3" id="3_cxr5p"]
+[ext_resource type="AudioStream" uid="uid://cxarn2u8e1yha" path="res://170418__eelke__bang-02-clean.mp3" id="3_kne1u"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_0xm2m"]
 friction = 0.24
@@ -39,7 +39,7 @@ mesh = SubResource("SphereMesh_pl1xf")
 shape = SubResource("SphereShape3D_7dm0k")
 
 [node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="." unique_id=867769441]
-stream = ExtResource("3_cxr5p")
+stream = ExtResource("3_kne1u")
 volume_db = -28.411
 pitch_scale = 1.46
 
