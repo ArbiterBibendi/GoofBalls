@@ -1,0 +1,31 @@
+[gd_resource type="SphereMesh" format=3 uid="uid://bbar6u5bp4j52"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_h2yge"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_h2yge"]
+render_priority = 1
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0, 0, 0, 1)
+grow = true
+grow_amount = 0.05
+stencil_mode = 3
+stencil_flags = 1
+stencil_compare = 5
+stencil_reference = 2
+metadata/_stencil_owned = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1bvp3"]
+next_pass = SubResource("StandardMaterial3D_h2yge")
+diffuse_mode = 3
+specular_mode = 1
+albedo_color = Color(0.42880145, 0.64582336, 1, 1)
+albedo_texture = SubResource("PlaceholderTexture2D_h2yge")
+stencil_mode = 1
+stencil_flags = 2
+stencil_reference = 2
+stencil_outline_thickness = 0.05
+
+[resource]
+lightmap_size_hint = Vector2i(17, 9)
+material = SubResource("StandardMaterial3D_1bvp3")

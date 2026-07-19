@@ -1,0 +1,47 @@
+[gd_scene format=3 uid="uid://neafyrt5gjco"]
+
+[ext_resource type="Material" uid="uid://dtmg2480rb7hi" path="res://Player.tres" id="2_e80uo"]
+[ext_resource type="Script" uid="uid://dw6yn3tb2w7f1" path="res://Player.cs" id="2_kne1u"]
+[ext_resource type="AudioStream" uid="uid://cwhbcmycwh3vj" path="res://vine-boom.mp3" id="3_cxr5p"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_pl1xf"]
+material = ExtResource("2_e80uo")
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_7dm0k"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_3tj6u"]
+properties/0/path = NodePath(".:linear_velocity")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+properties/1/path = NodePath(".:angular_velocity")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:position")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+properties/3/path = NodePath(".:rotation")
+properties/3/spawn = true
+properties/3/replication_mode = 1
+
+[node name="RigidBody3D" type="RigidBody3D" unique_id=204978772]
+contact_monitor = true
+max_contacts_reported = 4
+script = ExtResource("2_kne1u")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=1489342566]
+mesh = SubResource("SphereMesh_pl1xf")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1609444486]
+shape = SubResource("SphereShape3D_7dm0k")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="." unique_id=867769441]
+stream = ExtResource("3_cxr5p")
+volume_db = -28.411
+pitch_scale = 1.46
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=117848568]
+replication_config = SubResource("SceneReplicationConfig_3tj6u")
+
+[node name="Label3D" type="Label3D" parent="." unique_id=1961781341]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.87181866, 0)
+text = "Id"

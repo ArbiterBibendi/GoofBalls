@@ -1,0 +1,28 @@
+[gd_resource type="StandardMaterial3D" format=3 uid="uid://dtmg2480rb7hi"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_ig7tw"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_k22di"]
+render_priority = 1
+transparency = 1
+shading_mode = 0
+albedo_color = Color(0, 0, 0, 1)
+grow = true
+grow_amount = 0.05
+stencil_mode = 3
+stencil_flags = 1
+stencil_compare = 5
+stencil_reference = 2
+metadata/_stencil_owned = true
+
+[resource]
+next_pass = SubResource("StandardMaterial3D_k22di")
+diffuse_mode = 3
+specular_mode = 1
+albedo_color = Color(1, 0.23921569, 1, 1)
+albedo_texture = SubResource("PlaceholderTexture2D_ig7tw")
+uv1_scale = Vector3(3, 3, 3)
+stencil_mode = 1
+stencil_flags = 2
+stencil_reference = 2
+stencil_outline_thickness = 0.05

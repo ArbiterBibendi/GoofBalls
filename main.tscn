@@ -1,0 +1,128 @@
+[gd_scene format=3 uid="uid://cqow47bch5ocs"]
+
+[ext_resource type="Script" uid="uid://byjf3j7dtf0g1" path="res://Game.cs" id="1_1bvp3"]
+[ext_resource type="Script" uid="uid://drg8xtt5rtnn" path="res://Menu.cs" id="3_1bvp3"]
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_0xm2m"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_0xm2m"]
+render_priority = 1
+transparency = 1
+shading_mode = 0
+albedo_color = Color(1.347661e-06, 0.48009384, 0.6697709, 1)
+grow = true
+grow_amount = 0.01
+stencil_mode = 3
+stencil_flags = 1
+stencil_compare = 5
+metadata/_stencil_owned = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7dm0k"]
+next_pass = SubResource("StandardMaterial3D_0xm2m")
+diffuse_mode = 3
+specular_mode = 1
+albedo_color = Color(0.85842913, 0.76737005, 1.540184e-06, 1)
+albedo_texture = SubResource("PlaceholderTexture2D_0xm2m")
+stencil_mode = 1
+stencil_flags = 2
+stencil_color = Color(1.347661e-06, 0.48009384, 0.6697709, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_pl1xf"]
+material = SubResource("StandardMaterial3D_7dm0k")
+size = Vector3(5.5, 2, 5.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0xm2m"]
+size = Vector3(5.5, 2, 5.5)
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_7dm0k"]
+sky_top_color = Color(0, 0, 0, 1)
+sky_horizon_color = Color(0.000839947, 0.013831591, 0.05327387, 1)
+ground_bottom_color = Color(0, 0, 0, 1)
+ground_horizon_color = Color(0.526744, 0.6402358, 0.96045107, 1)
+sun_curve = 0.1098064
+
+[sub_resource type="Sky" id="Sky_7dm0k"]
+sky_material = SubResource("ProceduralSkyMaterial_7dm0k")
+
+[sub_resource type="Environment" id="Environment_7dm0k"]
+background_mode = 2
+sky = SubResource("Sky_7dm0k")
+ambient_light_source = 3
+ambient_light_color = Color(1, 1, 1, 1)
+ambient_light_sky_contribution = 0.3
+ambient_light_energy = 2.0
+volumetric_fog_enabled = true
+volumetric_fog_density = 0.1546
+volumetric_fog_emission = Color(0.99014026, 0.54784036, 0.6000696, 1)
+volumetric_fog_emission_energy = 0.1
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_pl1xf"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_0xm2m"]
+
+[node name="Node3D" type="Node3D" unique_id=2048026468]
+script = ExtResource("1_1bvp3")
+
+[node name="Map" type="Node3D" parent="." unique_id=505721116]
+
+[node name="StaticBody3D" type="StaticBody3D" parent="Map" unique_id=1385229345]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Map/StaticBody3D" unique_id=1871968622]
+mesh = SubResource("BoxMesh_pl1xf")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Map/StaticBody3D" unique_id=38958935]
+shape = SubResource("BoxShape3D_0xm2m")
+
+[node name="SpotLight3D" type="SpotLight3D" parent="Map" unique_id=924680393]
+transform = Transform3D(0.77898234, 0.07382818, -0.6226845, 0.512466, -0.6472041, 0.56436294, -0.36133808, -0.7587334, -0.5419949, -1.4992182, 5.5266705, -1.5272079)
+light_color = Color(0.7647059, 0.85882354, 0, 1)
+light_energy = 10.03
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=1936459526]
+transform = Transform3D(1, 0, 0, 0, 0.90632254, 0.4225866, 0, -0.4225866, 0.90632254, 0, 3.0846565, 4.737317)
+fov = 62.6
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2030994831]
+environment = SubResource("Environment_7dm0k")
+
+[node name="Menu" type="Panel" parent="." unique_id=1809231684]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -100.0
+offset_right = 150.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("3_1bvp3")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Menu" unique_id=113395239]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -87.5
+offset_top = -62.5
+offset_right = 87.5
+offset_bottom = 62.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Join" type="Button" parent="Menu/VBoxContainer" unique_id=274492178]
+material = SubResource("CanvasItemMaterial_pl1xf")
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+text = "Join"
+
+[node name="Create" type="Button" parent="Menu/VBoxContainer" unique_id=1488463308]
+material = SubResource("CanvasItemMaterial_0xm2m")
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+text = "Create"
