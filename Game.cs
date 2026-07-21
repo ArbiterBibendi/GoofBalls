@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using Godot;
 
@@ -8,6 +9,7 @@ public partial class Game : Node3D
     Dictionary<long, Player> _players = new Dictionary<long, Player>();
     Panel _mainMenu = null;
     Panel _pauseMenu = null;
+    Modal _modal = null;
     Node3D _spawnPoint = null;
 
     public override void _Ready()
@@ -16,9 +18,15 @@ public partial class Game : Node3D
         _mainMenu = GetNode<Panel>("MainMenu");
         _pauseMenu = GetNode<Panel>("PauseMenu");
         _spawnPoint = GetNode<Node3D>("Map/SpawnPoint");
+        _modal = GetNode<Modal>("Modal");
         Instance = this;
         Multiplayer.ServerDisconnected += RestartGame;
+        Multiplayer.ConnectionFailed += OnConnectionFailed;
+        Multiplayer.ConnectedToServer += OnConnectionSucceeded;
     }
+
+   
+
     public override void _Input(InputEvent @event)
     {
         base._Input(@event);
@@ -53,9 +61,12 @@ public partial class Game : Node3D
         {
             return;
         }
+        GD.Print(e);
         Multiplayer.MultiplayerPeer = peer;
 
         _mainMenu.Visible = false;
+        _modal.Visible = true;
+        _modal.SetText("Attempting to connect...");
         GD.Print("Join", Multiplayer.GetUniqueId());
     }
 
@@ -120,5 +131,16 @@ public partial class Game : Node3D
         }
 
         GetTree().ReloadCurrentScene();
+    }
+    private void OnConnectionFailed()
+    {
+        Multiplayer.MultiplayerPeer = null;
+        _mainMenu.Visible = true;
+        _modal.Visible = false;
+        GD.Print("Connection failed");
+    }
+    private void OnConnectionSucceeded() {
+        _modal.Visible = false;
+        _mainMenu.Visible = false;
     }
 }
