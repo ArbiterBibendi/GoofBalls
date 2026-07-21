@@ -6,7 +6,11 @@ public partial class Player : RigidBody3D
 {
     private long _id = 0;
     private float speed = 7f;
-    AudioStreamPlayer3D _audioStreamPlayer3D = null;
+    private const float DEADZONE = -1f;
+    private bool _dead = false;
+    AudioStreamPlayer3D _collisionAudioStreamPlayer = null;
+    AudioStreamPlayer3D _deathAudioStreamPlayer = null;
+    GpuParticles3D _gpuParticles3D = null;
     Label3D _label = null;
     public bool IsLocalPlayer()
     {
@@ -19,10 +23,12 @@ public partial class Player : RigidBody3D
     public override void _Ready()
     {
         base._Ready();
-        _audioStreamPlayer3D = (AudioStreamPlayer3D)FindChild("AudioStreamPlayer3D");
+        _collisionAudioStreamPlayer = (AudioStreamPlayer3D)FindChild("AudioStreamPlayer3D");
         _label = GetNode<Label3D>("Label3D");
         _label.Text = _id.ToString();
         _label.Modulate = (IsLocalPlayer()) ? Colors.Green : Colors.Red;
+        _gpuParticles3D = GetNode<GpuParticles3D>("GPUParticles3D");
+        _deathAudioStreamPlayer = (AudioStreamPlayer3D)FindChild("AudioStreamPlayer3D2");
     }
     public override void _PhysicsProcess(double delta)
     {
@@ -42,10 +48,12 @@ public partial class Player : RigidBody3D
         {
             if (body is Player)
             {
-                _audioStreamPlayer3D.Play();
+                _collisionAudioStreamPlayer.Play();
             }
         }
         HandleInput();
+        HandleDeath();
+
     }
     void HandleInput()
     { // move player
@@ -59,9 +67,26 @@ public partial class Player : RigidBody3D
     [Rpc(MultiplayerApi.RpcMode.AnyPeer, CallLocal = true)]
     void MovePlayer(Vector3 force)
     {
-        if (!Multiplayer.IsServer()) {
+        if (!Multiplayer.IsServer())
+        {
             return;
         }
         ApplyForce(force);
+    }
+    void HandleDeath()
+    {
+        if (Transform.Origin.Y <= DEADZONE)
+        {
+            Die();
+        }
+    }
+    void Die()
+    {
+        if (!_dead)
+        {
+            _gpuParticles3D.Emitting = true;
+            _deathAudioStreamPlayer.Play();
+        }
+        _dead = true;
     }
 }

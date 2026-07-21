@@ -3,6 +3,7 @@
 [ext_resource type="Material" uid="uid://dtmg2480rb7hi" path="res://Player.tres" id="2_e80uo"]
 [ext_resource type="Script" uid="uid://dw6yn3tb2w7f1" path="res://Player.cs" id="2_kne1u"]
 [ext_resource type="AudioStream" uid="uid://cxarn2u8e1yha" path="res://170418__eelke__bang-02-clean.mp3" id="3_kne1u"]
+[ext_resource type="AudioStream" uid="uid://bgo2w3xq81tc6" path="res://753843__evanboyerman__explosion-outdoors-medium.wav" id="4_e80uo"]
 
 [sub_resource type="PhysicsMaterial" id="PhysicsMaterial_0xm2m"]
 friction = 0.24
@@ -25,6 +26,18 @@ properties/2/replication_mode = 1
 properties/3/path = NodePath(".:rotation")
 properties/3/spawn = true
 properties/3/replication_mode = 1
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_cntra"]
+albedo_color = Color(0.7058824, 0.62352943, 0, 1)
+emission_enabled = true
+emission = Color(0.8117647, 1, 0.05490196, 1)
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_q4umw"]
+spread = 121.235
+initial_velocity_max = 76.92
+
+[sub_resource type="PrismMesh" id="PrismMesh_pl1xf"]
+size = Vector3(0.1, 0.1, 0.1)
 
 [node name="RigidBody3D" type="RigidBody3D" unique_id=204978772]
 physics_material_override = SubResource("PhysicsMaterial_0xm2m")
@@ -51,3 +64,17 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.87181866, 0)
 top_level = true
 billboard = 2
 text = "Id"
+
+[node name="GPUParticles3D" type="GPUParticles3D" parent="." unique_id=720932768]
+material_override = SubResource("StandardMaterial3D_cntra")
+emitting = false
+amount = 1000
+lifetime = 1.16
+one_shot = true
+explosiveness = 1.0
+randomness = 1.0
+process_material = SubResource("ParticleProcessMaterial_q4umw")
+draw_pass_1 = SubResource("PrismMesh_pl1xf")
+
+[node name="AudioStreamPlayer3D2" type="AudioStreamPlayer3D" parent="." unique_id=1048901247]
+stream = ExtResource("4_e80uo")
