@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://byjf3j7dtf0g1" path="res://Game.cs" id="1_1bvp3"]
 [ext_resource type="Script" uid="uid://psud0578hqxo" path="res://MainMenu.cs" id="2_h2yge"]
+[ext_resource type="Script" uid="uid://x08kd5wmn4jk" path="res://SpawnManager.cs" id="2_lquwl"]
 [ext_resource type="Script" uid="uid://bxmgfobv3ic4p" path="res://PauseMenu.cs" id="3_h2yge"]
 [ext_resource type="Script" uid="uid://d4n2q1shbhbde" path="res://Modal.cs" id="4_1bvp3"]
 
@@ -80,8 +81,20 @@ transform = Transform3D(0.77898234, 0.07382818, -0.6226845, 0.512466, -0.6472041
 light_color = Color(0.7647059, 0.85882354, 0, 1)
 light_energy = 10.03
 
-[node name="SpawnPoint" type="Marker3D" parent="Map" unique_id=1116308411]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2.0466356, 0)
+[node name="SpawnManager" type="Node3D" parent="Map" unique_id=460816701]
+script = ExtResource("2_lquwl")
+
+[node name="SpawnPoint1" type="Marker3D" parent="Map/SpawnManager" unique_id=1116308411]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.6339667, 2.0466356, -1.8247781)
+
+[node name="SpawnPoint2" type="Marker3D" parent="Map/SpawnManager" unique_id=1690551725]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.5724671, 2.0466356, 2.2505212)
+
+[node name="SpawnPoint3" type="Marker3D" parent="Map/SpawnManager" unique_id=2089442332]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.1121827, 2.0466356, -1.0146215)
+
+[node name="SpawnPoint4" type="Marker3D" parent="Map/SpawnManager" unique_id=131565827]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.0233645, 2.0466356, 1.7181885)
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1936459526]
 transform = Transform3D(1, 0, 0, 0, 0.90632254, 0.42258662, 0, -0.42258662, 0.90632254, 0, 3.0846565, 4.737317)

@@ -10,15 +10,15 @@ public partial class Game : Node3D
     Panel _mainMenu = null;
     Panel _pauseMenu = null;
     Modal _modal = null;
-    Node3D _spawnPoint = null;
+    SpawnManager _spawnManager = null;
 
     public override void _Ready()
     {
         base._Ready();
         _mainMenu = GetNode<Panel>("MainMenu");
         _pauseMenu = GetNode<Panel>("PauseMenu");
-        _spawnPoint = GetNode<Node3D>("Map/SpawnPoint");
         _modal = GetNode<Modal>("Modal");
+        _spawnManager = GetNode<SpawnManager>("Map/SpawnManager");
         Instance = this;
         Multiplayer.ServerDisconnected += RestartGame;
         Multiplayer.ConnectionFailed += OnConnectionFailed;
@@ -90,7 +90,7 @@ public partial class Game : Node3D
         Player player = ballScene.Instantiate<Player>();
         player.SetId(id);
         player.Name = id.ToString();
-        player.Transform = _spawnPoint.Transform;
+        player.Transform = _spawnManager.GetSpawnTransform();
         GD.Print("Adding Player: ", id);
         AddChild(player);
         _players[id] = player;
