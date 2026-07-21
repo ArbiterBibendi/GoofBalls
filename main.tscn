@@ -1,7 +1,8 @@
 [gd_scene format=3 uid="uid://cqow47bch5ocs"]
 
 [ext_resource type="Script" uid="uid://byjf3j7dtf0g1" path="res://Game.cs" id="1_1bvp3"]
-[ext_resource type="Script" uid="uid://drg8xtt5rtnn" path="res://Menu.cs" id="3_1bvp3"]
+[ext_resource type="Script" uid="uid://psud0578hqxo" path="res://MainMenu.cs" id="2_h2yge"]
+[ext_resource type="Script" uid="uid://bxmgfobv3ic4p" path="res://PauseMenu.cs" id="3_h2yge"]
 
 [sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_0xm2m"]
 
@@ -88,7 +89,7 @@ fov = 62.6
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=2030994831]
 environment = SubResource("Environment_7dm0k")
 
-[node name="Menu" type="Panel" parent="." unique_id=1809231684]
+[node name="MainMenu" type="Panel" parent="." unique_id=1809231684]
 anchors_preset = 8
 anchor_left = 0.5
 anchor_top = 0.5
@@ -102,9 +103,9 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
 size_flags_vertical = 4
-script = ExtResource("3_1bvp3")
+script = ExtResource("2_h2yge")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="Menu" unique_id=113395239]
+[node name="VBoxContainer" type="VBoxContainer" parent="MainMenu" unique_id=113395239]
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -118,14 +119,57 @@ offset_bottom = 62.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Join" type="Button" parent="Menu/VBoxContainer" unique_id=274492178]
+[node name="Join" type="Button" parent="MainMenu/VBoxContainer" unique_id=274492178]
 material = SubResource("CanvasItemMaterial_pl1xf")
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 text = "Join"
 
-[node name="Create" type="Button" parent="Menu/VBoxContainer" unique_id=1488463308]
+[node name="Create" type="Button" parent="MainMenu/VBoxContainer" unique_id=1488463308]
 material = SubResource("CanvasItemMaterial_0xm2m")
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 text = "Create"
+
+[node name="PauseMenu" type="Panel" parent="." unique_id=1919794393]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -100.0
+offset_right = 150.0
+offset_bottom = 100.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+script = ExtResource("3_h2yge")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="PauseMenu" unique_id=326040968]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -87.5
+offset_top = -62.5
+offset_right = 87.5
+offset_bottom = 62.5
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="Restart" type="Button" parent="PauseMenu/VBoxContainer" unique_id=1052248335]
+material = SubResource("CanvasItemMaterial_pl1xf")
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+text = "Restart"
+
+[node name="Quit" type="Button" parent="PauseMenu/VBoxContainer" unique_id=117169628]
+material = SubResource("CanvasItemMaterial_0xm2m")
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+text = "Quit"

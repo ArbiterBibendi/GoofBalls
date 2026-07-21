@@ -62,7 +62,6 @@ public partial class Player : RigidBody3D
         if (!Multiplayer.IsServer()) {
             return;
         }
-        GD.Print("MovePlayerRPC Called");
         ApplyForce(force);
     }
 }

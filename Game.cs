@@ -6,17 +6,29 @@ public partial class Game : Node3D
 
     public static Game Instance = null;
     Dictionary<long, Player> _players = new Dictionary<long, Player>();
-    Panel _menu = null;
+    Panel _mainMenu = null;
+    Panel _pauseMenu = null;
     Node3D _spawnPoint = null;
-    public Game()
-    {
-        Instance = this;
-    }
+
     public override void _Ready()
     {
         base._Ready();
-        _menu = GetNode<Panel>("Menu");
+        _mainMenu = GetNode<Panel>("MainMenu");
+        _pauseMenu = GetNode<Panel>("PauseMenu");
         _spawnPoint = GetNode<Node3D>("Map/SpawnPoint");
+        Instance = this;
+        Multiplayer.ServerDisconnected += RestartGame;
+    }
+    public override void _Input(InputEvent @event)
+    {
+        base._Input(@event);
+        if (@event is InputEventKey inputEventKey)
+        {
+            if (inputEventKey.Pressed && inputEventKey.Keycode == Key.Escape)
+            {
+                _pauseMenu.Visible = !_pauseMenu.Visible;
+            }
+        }
     }
     public void CreateGame()
     {
@@ -29,7 +41,7 @@ public partial class Game : Node3D
         Multiplayer.PeerConnected += OnClientJoined;
         Multiplayer.MultiplayerPeer = peer;
 
-        _menu.Visible = false;
+        _mainMenu.Visible = false;
         GD.Print("Create", Multiplayer.GetUniqueId());
         Rpc(MethodName.AddPlayer, Multiplayer.GetUniqueId());
     }
@@ -43,7 +55,7 @@ public partial class Game : Node3D
         }
         Multiplayer.MultiplayerPeer = peer;
 
-        _menu.Visible = false;
+        _mainMenu.Visible = false;
         GD.Print("Join", Multiplayer.GetUniqueId());
     }
 
@@ -51,7 +63,7 @@ public partial class Game : Node3D
     {
         GD.Print("Client Joined");
 
-        if (Multiplayer.IsServer())
+        if ((bool)(Multiplayer?.IsServer()))
         {
             foreach (var kvp in _players)
             {
@@ -71,5 +83,42 @@ public partial class Game : Node3D
         GD.Print("Adding Player: ", id);
         AddChild(player);
         _players[id] = player;
+    }
+
+    public void BroadcastRestartGame()
+    {
+        GD.Print("Broadcast", Multiplayer.MultiplayerPeer);
+        if (Multiplayer.IsServer())
+        {
+            Rpc(MethodName.RestartGame);
+        }
+        else {
+            RestartGame();
+        }
+    }
+    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true)]
+    private void RestartGame()
+    {
+        GD.Print("Restart RPC Called", Multiplayer?.GetUniqueId());
+
+        foreach (var kvp in _players)
+        {
+            kvp.Value.QueueFree();
+        }
+
+        _players = [];
+        
+        GD.Print("CallDeffered ", Multiplayer?.GetUniqueId());
+        CallDeferred(MethodName.ClosePeerAndDisconnect);
+    }
+    private void ClosePeerAndDisconnect()
+    {
+        if (Multiplayer.MultiplayerPeer != null)
+        {
+            Multiplayer.MultiplayerPeer.Close();
+            Multiplayer.MultiplayerPeer = null;
+        }
+
+        GetTree().ReloadCurrentScene();
     }
 }
