@@ -3,17 +3,16 @@ using System;
 
 public partial class PauseMenu : Panel
 {
-    Button _restart = null;
+    Button _disconnect = null;
 	Button _quit = null;
     public override void _Ready()
     {
-        _restart = (Button)FindChild("Restart");
+        _disconnect = (Button)FindChild("Disconnect");
         _quit = (Button)FindChild("Quit");
 
-		Multiplayer.ConnectedToServer += OnConnected;
 
         _quit.Pressed += QuitGame;
-        _restart.Pressed += RestartGame;
+        _disconnect.Pressed += Disconnect;
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -24,15 +23,8 @@ public partial class PauseMenu : Panel
     {
         GetTree().Quit();
     }
-    private void RestartGame()
+    private void Disconnect()
     {
-        Game.Instance.BroadcastRestartGame();
-    }
-    private void OnConnected()
-    {
-        if (!Multiplayer.IsServer())
-        {
-            _restart.Flat = true;
-        }
+        Game.Instance.BroadcastDisconnect();
     }
 }

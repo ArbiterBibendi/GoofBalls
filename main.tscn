@@ -176,11 +176,11 @@ offset_bottom = 62.5
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Restart" type="Button" parent="PauseMenu/VBoxContainer" unique_id=1052248335]
+[node name="Disconnect" type="Button" parent="PauseMenu/VBoxContainer" unique_id=1052248335]
 material = SubResource("CanvasItemMaterial_pl1xf")
 custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
-text = "Restart"
+text = "Disconnect"
 
 [node name="Quit" type="Button" parent="PauseMenu/VBoxContainer" unique_id=117169628]
 material = SubResource("CanvasItemMaterial_0xm2m")

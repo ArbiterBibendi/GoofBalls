@@ -24,7 +24,7 @@ public partial class Game : Node3D
         base._Ready();
         _pauseMenu = GetNode<Panel>("PauseMenu");
         _spawnManager = GetNode<SpawnManager>("Map/SpawnManager");
-        Multiplayer.ServerDisconnected += RestartGame;
+        Multiplayer.ServerDisconnected += Disconnect;
         Multiplayer.ConnectionFailed += OnConnectionFailed;
         Multiplayer.ConnectedToServer += OnConnectionSucceeded;
         Multiplayer.PeerConnected += OnClientJoined;
@@ -98,19 +98,19 @@ public partial class Game : Node3D
         _players[id] = player;
     }
 
-    public void BroadcastRestartGame()
+    public void BroadcastDisconnect()
     {
-        GD.Print("Broadcast", Multiplayer.MultiplayerPeer);
+        GD.Print("Broadcast disconnect", Multiplayer.MultiplayerPeer);
         if (Multiplayer.IsServer())
         {
-            Rpc(MethodName.RestartGame);
+            Rpc(MethodName.Disconnect);
         }
         else {
-            RestartGame();
+            Disconnect();
         }
     }
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true)]
-    private void RestartGame()
+    private void Disconnect()
     {
         GD.Print("Restart RPC Called", Multiplayer?.GetUniqueId());
 
