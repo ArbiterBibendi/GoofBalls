@@ -21,7 +21,7 @@ public partial class PauseMenu : Panel
         {
             if (inputEventKey.Pressed && inputEventKey.Keycode == Key.Escape)
             {
-                Visible = Visible;
+                Visible = !Visible;
             }
         }
     }
