@@ -33,6 +33,7 @@ public partial class Game : Node3D
         Multiplayer.ConnectionFailed += OnConnectionFailed;
         Multiplayer.ConnectedToServer += OnConnectionSucceeded;
         Multiplayer.PeerConnected += OnClientJoined;
+        Multiplayer.PeerDisconnected += OnClientDisconnected;
         StateChange?.Invoke(this, GameState.MainMenu);
         _roundRestartTimer = GetNode<Timer>("RoundRestartTimer");
         _roundRestartTimer.Timeout += BroadcastRestartRound;
@@ -100,13 +101,18 @@ public partial class Game : Node3D
     {
         GD.Print("Client Joined");
 
-        if ((bool)(Multiplayer?.IsServer()))
+        if (Multiplayer.IsServer())
         {
             foreach (var kvp in _players)
             {
                 RpcId(id, MethodName.AddPlayer, kvp.Key);
             }
             Rpc(MethodName.AddPlayer, id);
+        }
+    }
+    private void OnClientDisconnected(long id) {
+        if (Multiplayer.IsServer()) {
+            Rpc(MethodName.RemovePlayer, id);
         }
     }
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true, TransferMode = MultiplayerPeer.TransferModeEnum.Reliable)]
@@ -120,6 +126,11 @@ public partial class Game : Node3D
         GD.Print("Adding Player: ", id);
         AddChild(player);
         _players[id] = player;
+    }
+    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true)]
+    private void RemovePlayer(long id) {
+        _players[id].QueueFree();
+        _players.Remove(id);
     }
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true)]
     private void RestartRound()
