@@ -14,6 +14,17 @@ public partial class PauseMenu : Panel
         _quit.Pressed += QuitGame;
         _disconnect.Pressed += Disconnect;
     }
+    public override void _Input(InputEvent @event)
+    {
+        base._Input(@event);
+        if (@event is InputEventKey inputEventKey)
+        {
+            if (inputEventKey.Pressed && inputEventKey.Keycode == Key.Escape)
+            {
+                Visible = Visible;
+            }
+        }
+    }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
     public override void _Process(double delta)

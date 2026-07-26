@@ -81,16 +81,15 @@ public partial class Player : RigidBody3D
         if (!Dead)
         {
             _gpuParticles3D.Emitting = true;
+            GD.Print("Emit");
             _deathAudioStreamPlayer.Play();
         }
         Dead = true;
-        Visible = false;
     }
     public void Reset() {
         GlobalTransform = _spawnTransform;
         LinearVelocity = Vector3.Zero;
         AngularVelocity = Vector3.Zero;
-        Visible = true;
         Dead = false;
         _gpuParticles3D.Emitting = false;
     }

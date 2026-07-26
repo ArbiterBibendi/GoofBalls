@@ -50,7 +50,7 @@ public partial class Game : Node3D
                 if (!player.Dead) {
                     player.Die();
                     _playersDead++;
-                    if (_playersDead >= _players.Count) {
+                    if (_playersDead >= _players.Count - 1) { // last one alive
                         _roundRestartTimer.Start();
                     }
                 }
@@ -58,17 +58,6 @@ public partial class Game : Node3D
         }
     }
 
-    public override void _Input(InputEvent @event)
-    {
-        base._Input(@event);
-        if (@event is InputEventKey inputEventKey)
-        {
-            if (inputEventKey.Pressed && inputEventKey.Keycode == Key.Escape)
-            {
-                _pauseMenu.Visible = !_pauseMenu.Visible;
-            }
-        }
-    }
     public void CreateGame()
     {
         ENetMultiplayerPeer peer = new();
