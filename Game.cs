@@ -4,19 +4,24 @@ using Godot;
 
 public partial class Game : Node3D
 {
+    private const float DEADZONE = -1f;
+    private int _playersDead = 0;
 
     public static Game Instance = null;
     Dictionary<long, Player> _players = new Dictionary<long, Player>();
     Panel _pauseMenu = null;
     SpawnManager _spawnManager = null;
+    Timer _roundRestartTimer = null;
 
-    public enum GameState {
+    public enum GameState
+    {
         MainMenu,
         Connecting,
         Playing
     }
     public event EventHandler<GameState> StateChange;
-    public Game() {
+    public Game()
+    {
         Instance = this;
     }
     public override void _Ready()
@@ -29,9 +34,28 @@ public partial class Game : Node3D
         Multiplayer.ConnectedToServer += OnConnectionSucceeded;
         Multiplayer.PeerConnected += OnClientJoined;
         StateChange?.Invoke(this, GameState.MainMenu);
+        _roundRestartTimer = GetNode<Timer>("RoundRestartTimer");
+        _roundRestartTimer.Timeout += BroadcastRestartRound;
     }
 
-   
+    public override void _PhysicsProcess(double delta)
+    {
+        base._PhysicsProcess(delta);
+        foreach (var kvp in _players)
+        {
+            Player player = kvp.Value;
+            if (player.Transform.Origin.Y <= DEADZONE)
+            {
+                if (!player.Dead) {
+                    player.Die();
+                    _playersDead++;
+                    if (_playersDead >= _players.Count) {
+                        _roundRestartTimer.Start();
+                    }
+                }
+            }
+        }
+    }
 
     public override void _Input(InputEvent @event)
     {
@@ -97,7 +121,21 @@ public partial class Game : Node3D
         AddChild(player);
         _players[id] = player;
     }
-
+    [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true)]
+    private void RestartRound()
+    {
+        foreach (var kvp in _players)
+        {
+            kvp.Value.Reset();
+            GD.Print("Resetting Player: ", kvp.Value.GetId());
+        }
+        _playersDead = 0;
+    }
+    private void BroadcastRestartRound() {
+        if (Multiplayer.IsServer()) {
+            Rpc(MethodName.RestartRound);
+        }
+    }
     public void BroadcastDisconnect()
     {
         GD.Print("Broadcast disconnect", Multiplayer.MultiplayerPeer);
@@ -105,7 +143,8 @@ public partial class Game : Node3D
         {
             Rpc(MethodName.Disconnect);
         }
-        else {
+        else
+        {
             Disconnect();
         }
     }
@@ -120,7 +159,7 @@ public partial class Game : Node3D
         }
 
         _players = [];
-        
+
         CallDeferred(MethodName.ClosePeerAndDisconnect);
 
     }
@@ -142,7 +181,8 @@ public partial class Game : Node3D
         StateChange?.Invoke(this, GameState.MainMenu);
 
     }
-    private void OnConnectionSucceeded() {
+    private void OnConnectionSucceeded()
+    {
         StateChange?.Invoke(this, GameState.Playing);
     }
 }

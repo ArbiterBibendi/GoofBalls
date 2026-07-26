@@ -4,10 +4,10 @@ using Godot.Collections;
 
 public partial class Player : RigidBody3D
 {
+    private Transform3D _spawnTransform = new();
     private long _id = 0;
     private float speed = 7f;
-    private const float DEADZONE = -1f;
-    private bool _dead = false;
+    public bool Dead = false;
     AudioStreamPlayer3D _collisionAudioStreamPlayer = null;
     AudioStreamPlayer3D _deathAudioStreamPlayer = null;
     GpuParticles3D _gpuParticles3D = null;
@@ -20,6 +20,10 @@ public partial class Player : RigidBody3D
     {
         _id = id;
     }
+    public long GetId()
+    {
+        return _id;
+    }
     public override void _Ready()
     {
         base._Ready();
@@ -29,6 +33,7 @@ public partial class Player : RigidBody3D
         _label.Modulate = (IsLocalPlayer()) ? Colors.Green : Colors.Red;
         _gpuParticles3D = GetNode<GpuParticles3D>("GPUParticles3D");
         _deathAudioStreamPlayer = (AudioStreamPlayer3D)FindChild("AudioStreamPlayer3D2");
+        _spawnTransform = GlobalTransform;
     }
     public override void _PhysicsProcess(double delta)
     {
@@ -52,8 +57,6 @@ public partial class Player : RigidBody3D
             }
         }
         HandleInput();
-        HandleDeath();
-
     }
     void HandleInput()
     { // move player
@@ -73,20 +76,22 @@ public partial class Player : RigidBody3D
         }
         ApplyForce(force);
     }
-    void HandleDeath()
+    public void Die()
     {
-        if (Transform.Origin.Y <= DEADZONE)
-        {
-            Die();
-        }
-    }
-    void Die()
-    {
-        if (!_dead)
+        if (!Dead)
         {
             _gpuParticles3D.Emitting = true;
             _deathAudioStreamPlayer.Play();
         }
-        _dead = true;
+        Dead = true;
+        Visible = false;
+    }
+    public void Reset() {
+        GlobalTransform = _spawnTransform;
+        LinearVelocity = Vector3.Zero;
+        AngularVelocity = Vector3.Zero;
+        Visible = true;
+        Dead = false;
+        _gpuParticles3D.Emitting = false;
     }
 }
