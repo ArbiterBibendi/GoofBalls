@@ -7,22 +7,28 @@ public partial class Game : Node3D
 
     public static Game Instance = null;
     Dictionary<long, Player> _players = new Dictionary<long, Player>();
-    Panel _mainMenu = null;
     Panel _pauseMenu = null;
-    Modal _modal = null;
     SpawnManager _spawnManager = null;
 
+    public enum GameState {
+        MainMenu,
+        Connecting,
+        Playing
+    }
+    public event EventHandler<GameState> StateChange;
+    public Game() {
+        Instance = this;
+    }
     public override void _Ready()
     {
         base._Ready();
-        _mainMenu = GetNode<Panel>("MainMenu");
         _pauseMenu = GetNode<Panel>("PauseMenu");
-        _modal = GetNode<Modal>("Modal");
         _spawnManager = GetNode<SpawnManager>("Map/SpawnManager");
-        Instance = this;
         Multiplayer.ServerDisconnected += RestartGame;
         Multiplayer.ConnectionFailed += OnConnectionFailed;
         Multiplayer.ConnectedToServer += OnConnectionSucceeded;
+        Multiplayer.PeerConnected += OnClientJoined;
+        StateChange?.Invoke(this, GameState.MainMenu);
     }
 
    
@@ -40,16 +46,15 @@ public partial class Game : Node3D
     }
     public void CreateGame()
     {
-        ENetMultiplayerPeer peer = new ENetMultiplayerPeer();
+        ENetMultiplayerPeer peer = new();
         Error e = peer.CreateServer(1337);
         if (e != Error.Ok)
         {
             return;
         }
-        Multiplayer.PeerConnected += OnClientJoined;
         Multiplayer.MultiplayerPeer = peer;
 
-        _mainMenu.Visible = false;
+        StateChange?.Invoke(this, GameState.Playing);
         GD.Print("Create", Multiplayer.GetUniqueId());
         Rpc(MethodName.AddPlayer, Multiplayer.GetUniqueId());
     }
@@ -61,12 +66,9 @@ public partial class Game : Node3D
         {
             return;
         }
-        GD.Print(e);
         Multiplayer.MultiplayerPeer = peer;
 
-        _mainMenu.Visible = false;
-        _modal.Visible = true;
-        _modal.SetText("Attempting to connect...");
+        StateChange?.Invoke(this, GameState.Connecting);
         GD.Print("Join", Multiplayer.GetUniqueId());
     }
 
@@ -119,8 +121,8 @@ public partial class Game : Node3D
 
         _players = [];
         
-        GD.Print("CallDeffered ", Multiplayer?.GetUniqueId());
         CallDeferred(MethodName.ClosePeerAndDisconnect);
+
     }
     private void ClosePeerAndDisconnect()
     {
@@ -131,16 +133,16 @@ public partial class Game : Node3D
         }
 
         GetTree().ReloadCurrentScene();
+        StateChange?.Invoke(this, GameState.MainMenu);
     }
     private void OnConnectionFailed()
     {
         Multiplayer.MultiplayerPeer = null;
-        _mainMenu.Visible = true;
-        _modal.Visible = false;
         GD.Print("Connection failed");
+        StateChange?.Invoke(this, GameState.MainMenu);
+
     }
     private void OnConnectionSucceeded() {
-        _modal.Visible = false;
-        _mainMenu.Visible = false;
+        StateChange?.Invoke(this, GameState.Playing);
     }
 }
