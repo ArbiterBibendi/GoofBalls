@@ -9,8 +9,12 @@ public partial class MainMenu : Panel
     {
         Button create = (Button)FindChild("Create");
         Button join = (Button)FindChild("Join");
+        Button quit = (Button)FindChild("Quit");
+        
         create.Pressed += OnCreateClicked;
         join.Pressed += OnJoinClicked;
+        quit.Pressed += QuitGame;
+
         if ((_game = Game.Instance) == null)
         {
             GD.PrintErr("MainMenu: Game instance is null");
@@ -45,5 +49,9 @@ public partial class MainMenu : Panel
                 Visible = false;
                 break;
         }
+    }
+    private void QuitGame()
+    {
+        GetTree().Quit();
     }
 }

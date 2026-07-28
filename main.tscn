@@ -145,6 +145,12 @@ custom_minimum_size = Vector2(0, 50)
 layout_mode = 2
 text = "Create"
 
+[node name="Quit" type="Button" parent="MainMenu/VBoxContainer" unique_id=1676861319]
+material = SubResource("CanvasItemMaterial_0xm2m")
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+text = "Quit"
+
 [node name="PauseMenu" type="Panel" parent="." unique_id=1919794393]
 visible = false
 anchors_preset = 8
