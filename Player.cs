@@ -12,6 +12,7 @@ public partial class Player : RigidBody3D
     AudioStreamPlayer3D _deathAudioStreamPlayer = null;
     GpuParticles3D _gpuParticles3D = null;
     Label3D _label = null;
+    Timer _debounceTimer = null;
     public bool IsLocalPlayer()
     {
         return _id == Multiplayer.GetUniqueId();
@@ -34,6 +35,7 @@ public partial class Player : RigidBody3D
         _gpuParticles3D = GetNode<GpuParticles3D>("GPUParticles3D");
         _deathAudioStreamPlayer = (AudioStreamPlayer3D)FindChild("AudioStreamPlayer3D2");
         _spawnTransform = GlobalTransform;
+        _debounceTimer = GetNode<Timer>("DebounceTimer");
     }
     public override void _PhysicsProcess(double delta)
     {
@@ -51,9 +53,10 @@ public partial class Player : RigidBody3D
         }
         foreach (Node3D body in collidingBodies)
         {
-            if (body is Player)
+            if (body is Player && _debounceTimer.TimeLeft == 0)
             {
                 _collisionAudioStreamPlayer.Play();
+                _debounceTimer.Start();
             }
         }
         HandleInput();
