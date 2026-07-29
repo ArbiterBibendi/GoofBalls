@@ -2,22 +2,33 @@ using Godot;
 using System;
 
 public partial class PauseMenu : Panel
+
 {
+
+    Button _disconnect = null;
+    Button _quit = null;
     bool _enabled = false;
     public override void _Ready()
     {
-        Button disconnect = (Button)FindChild("Disconnect");
-        Button quit = (Button)FindChild("Quit");
+        _disconnect = (Button)FindChild("Disconnect");
+        _quit = (Button)FindChild("Quit");
 
 
-        quit.Pressed += QuitGame;
-        disconnect.Pressed += Disconnect;
-        Game.Instance.StateChange += OnStateChange;
+        _quit.Pressed += QuitGame;
+        _disconnect.Pressed += Disconnect;
+        Game.StateChange += OnStateChange;
+    }
+    public override void _ExitTree()
+    {
+        _quit.Pressed -= QuitGame;
+        _disconnect.Pressed -= Disconnect;
+        Game.StateChange -= OnStateChange;
     }
     public override void _Input(InputEvent @event)
     {
         base._Input(@event);
-        if (!_enabled) {
+        if (!_enabled)
+        {
             return;
         }
         if (@event is InputEventKey inputEventKey)
@@ -43,13 +54,14 @@ public partial class PauseMenu : Panel
     }
     private void OnStateChange(object sender, Game.GameState state)
     {
-        if (state == Game.GameState.Playing)
+        switch (state)
         {
-            _enabled = true;
-        }
-        else
-        {
-            _enabled = false;
+            case Game.GameState.MainMenu:
+                _enabled = false;
+                break;
+            default:
+                _enabled = true;
+                break;
         }
     }
 }

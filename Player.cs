@@ -1,3 +1,4 @@
+using System;
 using Godot;
 using Godot.Collections;
 
@@ -8,6 +9,7 @@ public partial class Player : RigidBody3D
     private long _id = 0;
     private float speed = 7f;
     public bool Dead = false;
+    public static event EventHandler Died;
     AudioStreamPlayer3D _collisionAudioStreamPlayer = null;
     AudioStreamPlayer3D _deathAudioStreamPlayer = null;
     GpuParticles3D _gpuParticles3D = null;
@@ -60,7 +62,18 @@ public partial class Player : RigidBody3D
             }
         }
         HandleInput();
+        HandleDeath();
     }
+
+    private void HandleDeath()
+    {
+        if (GlobalTransform.Origin.Y < Game.DEADZONE && !Dead) 
+        {
+            Die();
+            Died?.Invoke(this, null);
+        }
+    }
+
     void HandleInput()
     { // move player
         if (IsLocalPlayer())
@@ -79,7 +92,7 @@ public partial class Player : RigidBody3D
         }
         ApplyForce(force);
     }
-    public void Die()
+    private void Die()
     {
         if (!Dead)
         {

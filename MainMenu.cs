@@ -3,23 +3,29 @@ using System;
 
 public partial class MainMenu : Panel
 {
-    private Game _game = null;
     // Called when the node enters the scene tree for the first time.
+    Button _create = null;
+    Button _join = null;
+    Button _quit = null;
     public override void _Ready()
     {
-        Button create = (Button)FindChild("Create");
-        Button join = (Button)FindChild("Join");
-        Button quit = (Button)FindChild("Quit");
+        _create = (Button)FindChild("Create");
+        _join = (Button)FindChild("Join");
+        _quit = (Button)FindChild("Quit");
         
-        create.Pressed += OnCreateClicked;
-        join.Pressed += OnJoinClicked;
-        quit.Pressed += QuitGame;
+        _create.Pressed += OnCreateClicked;
+        _join.Pressed += OnJoinClicked;
+        _quit.Pressed += QuitGame;
 
-        if ((_game = Game.Instance) == null)
-        {
-            GD.PrintErr("MainMenu: Game instance is null");
-        }
-        _game.StateChange += OnGameStateChange;
+        Game.StateChange += OnGameStateChange;
+    }
+    public override void _ExitTree()
+    {
+        base._ExitTree();
+        _create.Pressed -= OnCreateClicked;
+        _join.Pressed -= OnJoinClicked;
+        _quit.Pressed -= QuitGame;
+        Game.StateChange -= OnGameStateChange;
     }
 
     // Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -29,11 +35,11 @@ public partial class MainMenu : Panel
 
     public void OnCreateClicked()
     {
-        Game.Instance.CreateGame();
+        Game.Instance?.CreateGame();
     }
     public void OnJoinClicked()
     {
-        Game.Instance.JoinGame();
+        Game.Instance?.JoinGame();
     }
     private void OnGameStateChange(object sender, Game.GameState state)
     {
@@ -42,10 +48,7 @@ public partial class MainMenu : Panel
             case Game.GameState.MainMenu:
                 Visible = true;
                 break;
-            case Game.GameState.Connecting:
-                Visible = false;
-                break;
-            case Game.GameState.Playing:
+            default:
                 Visible = false;
                 break;
         }
