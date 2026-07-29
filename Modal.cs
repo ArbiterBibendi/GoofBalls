@@ -34,7 +34,8 @@ public partial class Modal : Panel
                 break;
             case Game.GameState.RoundEnding:
                 Visible = true;
-                SetText($"{game.Winner.GetId()} won! Starting next round...");
+                string winner = game.Winner != null ? game.Winner.GetId().ToString() : "Nobody";
+                SetText($"{winner} won! Starting next round...");
                 break;
             default:
                 Visible = false;
