@@ -13,6 +13,7 @@ public partial class Player : RigidBody3D
     AudioStreamPlayer3D _collisionAudioStreamPlayer = null;
     AudioStreamPlayer3D _deathAudioStreamPlayer = null;
     GpuParticles3D _gpuParticles3D = null;
+    MeshInstance3D _meshInstance3D = null;
     Label3D _label = null;
     Timer _debounceTimer = null;
     public bool IsLocalPlayer()
@@ -38,6 +39,7 @@ public partial class Player : RigidBody3D
         _deathAudioStreamPlayer = (AudioStreamPlayer3D)FindChild("AudioStreamPlayer3D2");
         _spawnTransform = GlobalTransform;
         _debounceTimer = GetNode<Timer>("DebounceTimer");
+        _meshInstance3D = GetNode<MeshInstance3D>("MeshInstance3D");
     }
     public override void _PhysicsProcess(double delta)
     {
@@ -101,6 +103,7 @@ public partial class Player : RigidBody3D
             _deathAudioStreamPlayer.Play();
         }
         Dead = true;
+        _meshInstance3D.Visible = false;
     }
     public void Reset() {
         GlobalTransform = _spawnTransform;
@@ -108,5 +111,6 @@ public partial class Player : RigidBody3D
         AngularVelocity = Vector3.Zero;
         Dead = false;
         _gpuParticles3D.Emitting = false;
+        _meshInstance3D.Visible = true;
     }
 }
