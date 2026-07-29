@@ -127,7 +127,8 @@ public partial class Game : Node3D
         Player player = ballScene.Instantiate<Player>();
         player.SetId(id);
         player.Name = id.ToString();
-        player.Transform = _spawnManager.GetSpawnTransform();
+        _spawnManager.RegisterPlayer(player);
+        player.Transform = _spawnManager.GetSpawnTransform(player);
         GD.Print("Adding Player: ", id);
         AddChild(player);
         _players[id] = player;
@@ -135,6 +136,7 @@ public partial class Game : Node3D
     [Rpc(MultiplayerApi.RpcMode.Authority, CallLocal = true)]
     private void RemovePlayer(long id)
     {
+        _spawnManager.UnregisterPlayer(_players[id]);
         _players[id].QueueFree();
         _players.Remove(id);
     }
